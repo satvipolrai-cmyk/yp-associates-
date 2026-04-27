@@ -1,532 +1,462 @@
-import { useMemo, useState } from "react";
+Here is the full `index.html` code:
 
-const galleryItems = [
-  {
-    className: "gallery-card large",
-    src: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1300&q=82",
-    alt: "Open land parcel suitable for valuation",
-    title: "Land and plot valuation",
-    text: "Market rate analysis, location potential, access, and land use review.",
-  },
-  {
-    className: "gallery-card",
-    src: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=82",
-    alt: "Residential property exterior",
-    title: "Residential buildings",
-    text: "Inspection of construction quality, age, condition, and neighbourhood value.",
-  },
-  {
-    className: "gallery-card",
-    src: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=82",
-    alt: "Modern house and landscaped plot",
-    title: "Premium homes and villas",
-    text: "Assessment for purchase, mortgage, and formal lending requirements.",
-  },
-  {
-    className: "gallery-card",
-    src: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=82",
-    alt: "Commercial building for valuation",
-    title: "Commercial assets",
-    text: "Valuation of offices, shops, mixed-use buildings, and income properties.",
-  },
-  {
-    className: "gallery-card wide",
-    src: "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1200&q=82",
-    alt: "Industrial factory building and warehouse",
-    title: "Factories and industrial premises",
-    text: "Review of built-up area, shed structure, industrial location, and utility.",
-  },
-  {
-    className: "gallery-card",
-    src: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=900&q=82",
-    alt: "Property site and surrounding development area",
-    title: "Location assessment",
-    text: "Evaluation of approach road, surroundings, development, and market demand.",
-  },
-  {
-    className: "gallery-card",
-    src: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=82",
-    alt: "Developed land with open surroundings",
-    title: "Open land potential",
-    text: "Consideration of frontage, usability, neighbourhood growth, and saleability.",
-  },
-];
-
-const typeMultipliers = {
-  flat: 1,
-  building: 1.08,
-  land: 0.95,
-  factory: 1.15,
-};
-
-function formatRupees(value) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function App() {
-  const [calculator, setCalculator] = useState({
-    type: "flat",
-    area: "",
-    rate: "",
-    age: "1",
-  });
-  const [status, setStatus] = useState("");
-
-  const estimate = useMemo(() => {
-    const area = Number(calculator.area);
-    const rate = Number(calculator.rate);
-
-    if (!area || !rate) {
-      return "Rs. 0";
-    }
-
-    return formatRupees(area * rate * typeMultipliers[calculator.type] * Number(calculator.age));
-  }, [calculator]);
-
-  function updateCalculator(event) {
-    const { name, value } = event.target;
-    setCalculator((current) => ({ ...current, [name]: value }));
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const enquiry = Object.fromEntries(formData.entries());
-    const enquiries = JSON.parse(localStorage.getItem("valuationEnquiries") || "[]");
-
-    enquiries.push({ ...enquiry, createdAt: new Date().toISOString() });
-    localStorage.setItem("valuationEnquiries", JSON.stringify(enquiries));
-
-    event.currentTarget.reset();
-    setStatus("Your valuation request has been submitted. Y&P Associates will contact you shortly.");
-  }
-
-  return (
-    <>
-      <header className="topbar">
-        <a className="brand" href="#home" aria-label="Y&P Associates property valuation home">
-          <span className="brand-mark">Y&amp;P</span>
-          <span>
-            <strong>Y&amp;P Associates</strong>
-            <small>Professional property valuers</small>
-          </span>
-        </a>
-
-        <nav className="nav" aria-label="Main navigation">
-          <a href="#services">Services</a>
-          <a href="#about">About</a>
-          <a href="#gallery">Gallery</a>
-          <a href="#process">Process</a>
-          <a href="#register">Register</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </header>
-
-      <main>
-        <section className="hero" id="home">
-          <div className="hero-media" aria-hidden="true" />
-          <div className="hero-content">
-            <p className="eyebrow">Bank panel valuation and property advisory services</p>
-            <h1>Professional property valuation for lending, purchase, and documentation.</h1>
-            <p>
-              Y&amp;P Associates provides valuation services for residential buildings, land parcels,
-              flats, commercial premises, factories, and industrial assets. Our services support
-              home loans, loan against property, purchase decisions, mortgage cases, and formal
-              property documentation.
-            </p>
-            <div className="hero-actions">
-              <a className="primary-button" href="#register">
-                Submit valuation request
-              </a>
-              <a className="secondary-button" href="#calculator">
-                View indicative estimate
-              </a>
-            </div>
-            <div className="trust-row" aria-label="Bank panel experience">
-              <span>PNB</span>
-              <span>UCO Bank</span>
-              <span>Union Bank</span>
-              <span>Other banks</span>
-            </div>
-            <div className="hero-metrics" aria-label="Professional highlights">
-              <div>
-                <strong>Bank Panel</strong>
-                <span>Valuation assignments for loan and mortgage purposes</span>
-              </div>
-              <div>
-                <strong>Site Verified</strong>
-                <span>Reports based on documents, inspection, and market review</span>
-              </div>
-              <div>
-                <strong>Multiple Assets</strong>
-                <span>Land, flats, buildings, factories, and commercial properties</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="section about-section" id="about">
-          <div className="about-copy">
-            <p className="eyebrow">About Y&amp;P Associates</p>
-            <h2>
-              Independent property valuation with a practical understanding of bank requirements.
-            </h2>
-            <p>
-              Y&amp;P Associates assists clients with professional valuation reports for lending,
-              mortgage, purchase, sale, documentation, legal reference, and asset declaration
-              purposes. Each assignment is approached with attention to ownership records, site
-              condition, approved area, location factors, market evidence, and the intended purpose
-              of valuation.
-            </p>
-          </div>
-
-          <div className="credential-panel">
-            <h3>Professional focus</h3>
-            <ul>
-              <li>Property valuation for bank and private client requirements</li>
-              <li>Residential, commercial, industrial, land, and flat assessment</li>
-              <li>Site inspection and document-based reporting process</li>
-              <li>Clear communication for borrowers, owners, buyers, and advisors</li>
-            </ul>
-          </div>
-        </section>
-
-        <section className="section service-band" id="services">
-          <div className="section-heading">
-            <p className="eyebrow">Scope of services</p>
-            <h2>Valuation assignments undertaken for banks, borrowers, and private clients</h2>
-          </div>
-
-          <div className="service-grid">
-            <article className="service-card">
-              <span className="icon-box">H</span>
-              <h3>Residential Buildings</h3>
-              <p>
-                Valuation of independent houses, villas, existing structures, new constructions,
-                and renovation-related cases.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="icon-box">F</span>
-              <h3>Flats and Apartments</h3>
-              <p>
-                Assessment of flats, apartments, builder floors, group housing units, and
-                under-construction residential properties.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="icon-box">L</span>
-              <h3>Land and Plots</h3>
-              <p>
-                Valuation of residential plots, agricultural land, converted land, freehold land,
-                and leasehold property interests.
-              </p>
-            </article>
-            <article className="service-card">
-              <span className="icon-box">I</span>
-              <h3>Factories and Industrial Assets</h3>
-              <p>
-                Valuation of factory buildings, industrial sheds, warehouses, workshops, and
-                industrial land parcels.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section className="section purpose-section">
-          <div className="section-heading">
-            <p className="eyebrow">Valuation purposes</p>
-            <h2>Reports prepared for practical financial, legal, and personal requirements</h2>
-          </div>
-          <div className="purpose-grid">
-            <article>
-              <h3>Home Loan and Mortgage</h3>
-              <p>For home loan, loan against property, refinance, and lender documentation.</p>
-            </article>
-            <article>
-              <h3>Purchase and Sale Decisions</h3>
-              <p>For buyers and sellers who need a fair understanding of market value.</p>
-            </article>
-            <article>
-              <h3>Legal and Family Matters</h3>
-              <p>For settlement, partition, record keeping, legal reference, and advisory use.</p>
-            </article>
-            <article>
-              <h3>Government or Asset Declaration</h3>
-              <p>For asset showing, declaration, formal records, and official documentation needs.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="section gallery-section" id="gallery">
-          <div className="section-heading">
-            <p className="eyebrow">Property valuation gallery</p>
-            <h2>Land, residential, commercial, and industrial assets we help assess</h2>
-          </div>
-          <div className="gallery-grid">
-            {galleryItems.map((item) => (
-              <figure className={item.className} key={item.title}>
-                <img src={item.src} alt={item.alt} />
-                <figcaption>
-                  <strong>{item.title}</strong>
-                  <span>{item.text}</span>
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </section>
-
-        <section className="section split-section" id="calculator">
-          <div>
-            <p className="eyebrow">Indicative calculator</p>
-            <h2>Preliminary value indication before formal inspection</h2>
-            <p className="section-copy">
-              This calculator is intended only for a preliminary understanding of value. Final
-              valuation is subject to title document review, physical inspection, location analysis,
-              construction specifications, property age, market evidence, and applicable bank
-              requirements.
-            </p>
-            <div className="estimate-result" aria-live="polite">
-              <span>Indicative value</span>
-              <strong>{estimate}</strong>
-            </div>
-          </div>
-
-          <form className="calculator-form">
-            <label>
-              Property type
-              <select name="type" value={calculator.type} onChange={updateCalculator}>
-                <option value="flat">Flat / Apartment</option>
-                <option value="building">Residential building</option>
-                <option value="land">Land / Plot</option>
-                <option value="factory">Factory / Industrial</option>
-              </select>
-            </label>
-            <label>
-              Area
-              <input
-                name="area"
-                type="number"
-                min="1"
-                placeholder="Example: 1200"
-                value={calculator.area}
-                onChange={updateCalculator}
-              />
-            </label>
-            <label>
-              Rate per sq. ft.
-              <input
-                name="rate"
-                type="number"
-                min="1"
-                placeholder="Example: 4500"
-                value={calculator.rate}
-                onChange={updateCalculator}
-              />
-            </label>
-            <label>
-              Construction age
-              <select name="age" value={calculator.age} onChange={updateCalculator}>
-                <option value="1">New / under 5 years</option>
-                <option value="0.92">5 to 10 years</option>
-                <option value="0.84">10 to 20 years</option>
-                <option value="0.72">Above 20 years</option>
-              </select>
-            </label>
-          </form>
-        </section>
-
-        <section className="section process-section" id="process">
-          <div className="section-heading">
-            <p className="eyebrow">Valuation process</p>
-            <h2>A structured process from enquiry to final report</h2>
-          </div>
-          <div className="process-grid">
-            <article>
-              <span>01</span>
-              <h3>Enquiry Registration</h3>
-              <p>Submit client details, property category, location, approximate area, and purpose.</p>
-            </article>
-            <article>
-              <span>02</span>
-              <h3>Document Review</h3>
-              <p>
-                Provide available title documents, approved plan, tax records, allotment letter, or
-                sale deed for verification.
-              </p>
-            </article>
-            <article>
-              <span>03</span>
-              <h3>Site Inspection</h3>
-              <p>
-                A physical inspection is conducted to verify area, construction quality, access,
-                occupancy, and property condition.
-              </p>
-            </article>
-            <article>
-              <span>04</span>
-              <h3>Report Preparation</h3>
-              <p>
-                The valuation report is prepared in the required format for bank, client, legal, or
-                personal reference.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section className="section assurance-section">
-          <div className="assurance-content">
-            <p className="eyebrow">Report approach</p>
-            <h2>Prepared with inspection, documentation, and market evidence.</h2>
-            <p>
-              A professional valuation is more than a rate calculation. It requires verification of
-              property details, review of available records, consideration of development potential,
-              comparison with market evidence, and clear reporting suitable for the stated purpose.
-            </p>
-          </div>
-          <div className="assurance-list">
-            <div>
-              <span>01</span>
-              <strong>Document review</strong>
-              <p>Ownership papers, plans, tax records, allotment details, and available approvals.</p>
-            </div>
-            <div>
-              <span>02</span>
-              <strong>Physical inspection</strong>
-              <p>Area, frontage, access, construction condition, age, occupancy, and site features.</p>
-            </div>
-            <div>
-              <span>03</span>
-              <strong>Market analysis</strong>
-              <p>Comparable rates, location demand, utility, saleability, and present market trend.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="section register-section" id="register">
-          <div className="register-copy">
-            <p className="eyebrow">Client registration</p>
-            <h2>Submit your property details for valuation</h2>
-            <p>
-              Please provide the basic property and contact details below. Y&amp;P Associates will
-              review the information and contact you for documents, inspection scheduling, and
-              further valuation requirements.
-            </p>
-            <div className="info-panel">
-              <h3>Documents generally required</h3>
-              <ul>
-                <li>Sale deed or allotment letter</li>
-                <li>Approved map or building plan</li>
-                <li>Latest tax receipt or electricity bill</li>
-                <li>Loan or institution details, wherever applicable</li>
-              </ul>
-            </div>
-          </div>
-
-          <form className="registration-form" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <label>
-                Applicant name
-                <input name="name" type="text" required placeholder="Enter applicant name" />
-              </label>
-              <label>
-                Contact number
-                <input
-                  name="mobile"
-                  type="tel"
-                  required
-                  inputMode="numeric"
-                  placeholder="10 digit contact number"
-                />
-              </label>
-            </div>
-            <div className="form-row">
-              <label>
-                Property category
-                <select name="propertyType" required defaultValue="">
-                  <option value="">Select property</option>
-                  <option>Residential building</option>
-                  <option>Flat / apartment</option>
-                  <option>Land / plot</option>
-                  <option>Factory / industrial</option>
-                  <option>Commercial property</option>
-                </select>
-              </label>
-              <label>
-                Approximate area
-                <input name="area" type="text" placeholder="Example: 1500 sq. ft." />
-              </label>
-            </div>
-            <label>
-              Property address / location
-              <input name="location" type="text" required placeholder="City, area, landmark" />
-            </label>
-            <div className="form-row">
-              <label>
-                Purpose of valuation
-                <select name="purpose" required defaultValue="">
-                  <option value="">Select purpose</option>
-                  <option>Home loan</option>
-                  <option>Loan against property</option>
-                  <option>Buying / selling</option>
-                  <option>Legal / family settlement</option>
-                  <option>Asset declaration to government authority</option>
-                  <option>Personal knowledge</option>
-                </select>
-              </label>
-              <label>
-                Preferred contact time
-                <select name="contactTime" defaultValue="">
-                  <option value="">Select time</option>
-                  <option>Morning</option>
-                  <option>Afternoon</option>
-                  <option>Evening</option>
-                  <option>Anytime</option>
-                </select>
-              </label>
-            </div>
-            <label>
-              Additional information
-              <textarea
-                name="details"
-                rows="4"
-                placeholder="Mention property age, floor, road width, occupancy, documents available, etc."
-              />
-            </label>
-            <button className="primary-button full-button" type="submit">
-              Submit valuation request
-            </button>
-            <p className="form-status success" role="status">
-              {status}
-            </p>
-          </form>
-        </section>
-      </main>
-
-      <footer className="footer" id="contact">
-        <div>
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Y&amp;P Associates | Property Valuation Services</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Y&P Associates property valuation home">
+        <span class="brand-mark">Y&amp;P</span>
+        <span>
           <strong>Y&amp;P Associates</strong>
+          <small>Professional property valuers</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#process">Process</a>
+        <a href="#register">Register</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-media" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="eyebrow">Bank panel valuation and property advisory services</p>
+          <h1>Professional property valuation for lending, purchase, and documentation.</h1>
           <p>
-            Professional valuation of buildings, land, flats, factories, commercial assets, and bank
-            mortgage cases.
+            Y&amp;P Associates provides valuation services for residential buildings, land parcels,
+            flats, commercial premises, factories, and industrial assets. Our services support home
+            loans, loan against property, purchase decisions, mortgage cases, and formal property
+            documentation.
           </p>
-          <div className="contact-details" aria-label="Contact details">
-            <a href="tel:9958067860">9958067860</a>
-            <a href="tel:8851008259">8851008259</a>
-            <a href="mailto:yatendrapaliwal1@gmail.com">yatendrapaliwal1@gmail.com</a>
+          <div class="hero-actions">
+            <a class="primary-button" href="#register">Submit valuation request</a>
+            <a class="secondary-button" href="#calculator">View indicative estimate</a>
+          </div>
+          <div class="trust-row" aria-label="Bank panel experience">
+            <span>PNB</span>
+            <span>UCO Bank</span>
+            <span>Union Bank</span>
+            <span>Other banks</span>
+          </div>
+          <div class="hero-metrics" aria-label="Professional highlights">
+            <div>
+              <strong>Bank Panel</strong>
+              <span>Valuation assignments for loan and mortgage purposes</span>
+            </div>
+            <div>
+              <strong>Site Verified</strong>
+              <span>Reports based on documents, inspection, and market review</span>
+            </div>
+            <div>
+              <strong>Multiple Assets</strong>
+              <span>Land, flats, buildings, factories, and commercial properties</span>
+            </div>
           </div>
         </div>
-        <a className="primary-button" href="#register">
-          Submit request
-        </a>
-      </footer>
-    </>
-  );
-}
+      </section>
 
-export default App;
+      <section class="section about-section" id="about">
+        <div class="about-copy">
+          <p class="eyebrow">About Y&amp;P Associates</p>
+          <h2>Independent property valuation with a practical understanding of bank requirements.</h2>
+          <p>
+            Y&amp;P Associates assists clients with professional valuation reports for lending,
+            mortgage, purchase, sale, documentation, legal reference, and asset declaration
+            purposes. Each assignment is approached with attention to ownership records, site
+            condition, approved area, location factors, market evidence, and the intended purpose of
+            valuation.
+          </p>
+        </div>
+        <div class="credential-panel">
+          <h3>Professional focus</h3>
+          <ul>
+            <li>Property valuation for bank and private client requirements</li>
+            <li>Residential, commercial, industrial, land, and flat assessment</li>
+            <li>Site inspection and document-based reporting process</li>
+            <li>Clear communication for borrowers, owners, buyers, and advisors</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section service-band" id="services">
+        <div class="section-heading">
+          <p class="eyebrow">Scope of services</p>
+          <h2>Valuation assignments undertaken for banks, borrowers, and private clients</h2>
+        </div>
+        <div class="service-grid">
+          <article class="service-card">
+            <span class="icon-box">H</span>
+            <h3>Residential Buildings</h3>
+            <p>Valuation of independent houses, villas, existing structures, new constructions, and renovation-related cases.</p>
+          </article>
+          <article class="service-card">
+            <span class="icon-box">F</span>
+            <h3>Flats and Apartments</h3>
+            <p>Assessment of flats, apartments, builder floors, group housing units, and under-construction residential properties.</p>
+          </article>
+          <article class="service-card">
+            <span class="icon-box">L</span>
+            <h3>Land and Plots</h3>
+            <p>Valuation of residential plots, agricultural land, converted land, freehold land, and leasehold property interests.</p>
+          </article>
+          <article class="service-card">
+            <span class="icon-box">I</span>
+            <h3>Factories and Industrial Assets</h3>
+            <p>Valuation of factory buildings, industrial sheds, warehouses, workshops, and industrial land parcels.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section purpose-section">
+        <div class="section-heading">
+          <p class="eyebrow">Valuation purposes</p>
+          <h2>Reports prepared for practical financial, legal, and personal requirements</h2>
+        </div>
+        <div class="purpose-grid">
+          <article>
+            <h3>Home Loan and Mortgage</h3>
+            <p>For home loan, loan against property, refinance, and lender documentation.</p>
+          </article>
+          <article>
+            <h3>Purchase and Sale Decisions</h3>
+            <p>For buyers and sellers who need a fair understanding of market value.</p>
+          </article>
+          <article>
+            <h3>Legal and Family Matters</h3>
+            <p>For settlement, partition, record keeping, legal reference, and advisory use.</p>
+          </article>
+          <article>
+            <h3>Government or Asset Declaration</h3>
+            <p>For asset showing, declaration, formal records, and official documentation needs.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section gallery-section" id="gallery">
+        <div class="section-heading">
+          <p class="eyebrow">Property valuation gallery</p>
+          <h2>Land, residential, commercial, and industrial assets we help assess</h2>
+        </div>
+        <div class="gallery-grid">
+          <figure class="gallery-card large">
+            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1300&q=82" alt="Open land parcel suitable for valuation" />
+            <figcaption>
+              <strong>Land and plot valuation</strong>
+              <span>Market rate analysis, location potential, access, and land use review.</span>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=82" alt="Residential property exterior" />
+            <figcaption>
+              <strong>Residential buildings</strong>
+              <span>Inspection of construction quality, age, condition, and neighbourhood value.</span>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=82" alt="Modern house and landscaped plot" />
+            <figcaption>
+              <strong>Premium homes and villas</strong>
+              <span>Assessment for purchase, mortgage, and formal lending requirements.</span>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=82" alt="Commercial building for valuation" />
+            <figcaption>
+              <strong>Commercial assets</strong>
+              <span>Valuation of offices, shops, mixed-use buildings, and income properties.</span>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card wide">
+            <img src="https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1200&q=82" alt="Industrial factory building and warehouse" />
+            <figcaption>
+              <strong>Factories and industrial premises</strong>
+              <span>Review of built-up area, shed structure, industrial location, and utility.</span>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=900&q=82" alt="Property site and surrounding development area" />
+            <figcaption>
+              <strong>Location assessment</strong>
+              <span>Evaluation of approach road, surroundings, development, and market demand.</span>
+            </figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=82" alt="Developed land with open surroundings" />
+            <figcaption>
+              <strong>Open land potential</strong>
+              <span>Consideration of frontage, usability, neighbourhood growth, and saleability.</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section split-section" id="calculator">
+        <div>
+          <p class="eyebrow">Indicative calculator</p>
+          <h2>Preliminary value indication before formal inspection</h2>
+          <p class="section-copy">
+            This calculator is intended only for a preliminary understanding of value. Final
+            valuation is subject to title document review, physical inspection, location analysis,
+            construction specifications, property age, market evidence, and applicable bank
+            requirements.
+          </p>
+          <div class="estimate-result" aria-live="polite">
+            <span>Indicative value</span>
+            <strong id="estimate-value">Rs. 0</strong>
+          </div>
+        </div>
+        <form class="calculator-form" id="calculator-form">
+          <label>
+            Property type
+            <select id="calc-type">
+              <option value="flat">Flat / Apartment</option>
+              <option value="building">Residential building</option>
+              <option value="land">Land / Plot</option>
+              <option value="factory">Factory / Industrial</option>
+            </select>
+          </label>
+          <label>
+            Area
+            <input id="calc-area" type="number" min="1" placeholder="Example: 1200" />
+          </label>
+          <label>
+            Rate per sq. ft.
+            <input id="calc-rate" type="number" min="1" placeholder="Example: 4500" />
+          </label>
+          <label>
+            Construction age
+            <select id="calc-age">
+              <option value="1">New / under 5 years</option>
+              <option value="0.92">5 to 10 years</option>
+              <option value="0.84">10 to 20 years</option>
+              <option value="0.72">Above 20 years</option>
+            </select>
+          </label>
+        </form>
+      </section>
+
+      <section class="section process-section" id="process">
+        <div class="section-heading">
+          <p class="eyebrow">Valuation process</p>
+          <h2>A structured process from enquiry to final report</h2>
+        </div>
+        <div class="process-grid">
+          <article>
+            <span>01</span>
+            <h3>Enquiry Registration</h3>
+            <p>Submit client details, property category, location, approximate area, and purpose.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Document Review</h3>
+            <p>Provide available title documents, approved plan, tax records, allotment letter, or sale deed for verification.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Site Inspection</h3>
+            <p>A physical inspection is conducted to verify area, construction quality, access, occupancy, and property condition.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Report Preparation</h3>
+            <p>The valuation report is prepared in the required format for bank, client, legal, or personal reference.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section assurance-section">
+        <div class="assurance-content">
+          <p class="eyebrow">Report approach</p>
+          <h2>Prepared with inspection, documentation, and market evidence.</h2>
+          <p>
+            A professional valuation is more than a rate calculation. It requires verification of
+            property details, review of available records, consideration of development potential,
+            comparison with market evidence, and clear reporting suitable for the stated purpose.
+          </p>
+        </div>
+        <div class="assurance-list">
+          <div>
+            <span>01</span>
+            <strong>Document review</strong>
+            <p>Ownership papers, plans, tax records, allotment details, and available approvals.</p>
+          </div>
+          <div>
+            <span>02</span>
+            <strong>Physical inspection</strong>
+            <p>Area, frontage, access, construction condition, age, occupancy, and site features.</p>
+          </div>
+          <div>
+            <span>03</span>
+            <strong>Market analysis</strong>
+            <p>Comparable rates, location demand, utility, saleability, and present market trend.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section register-section" id="register">
+        <div class="register-copy">
+          <p class="eyebrow">Client registration</p>
+          <h2>Submit your property details for valuation</h2>
+          <p>
+            Please provide the basic property and contact details below. Y&amp;P Associates will review
+            the information and contact you for documents, inspection scheduling, and further
+            valuation requirements.
+          </p>
+          <div class="info-panel">
+            <h3>Documents generally required</h3>
+            <ul>
+              <li>Sale deed or allotment letter</li>
+              <li>Approved map or building plan</li>
+              <li>Latest tax receipt or electricity bill</li>
+              <li>Loan or institution details, wherever applicable</li>
+            </ul>
+          </div>
+        </div>
+        <form class="registration-form" id="registration-form">
+          <div class="form-row">
+            <label>
+              Applicant name
+              <input name="name" type="text" required placeholder="Enter applicant name" />
+            </label>
+            <label>
+              Contact number
+              <input name="mobile" type="tel" required inputmode="numeric" placeholder="10 digit contact number" />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>
+              Property category
+              <select name="propertyType" required>
+                <option value="">Select property</option>
+                <option>Residential building</option>
+                <option>Flat / apartment</option>
+                <option>Land / plot</option>
+                <option>Factory / industrial</option>
+                <option>Commercial property</option>
+              </select>
+            </label>
+            <label>
+              Approximate area
+              <input name="area" type="text" placeholder="Example: 1500 sq. ft." />
+            </label>
+          </div>
+          <label>
+            Property address / location
+            <input name="location" type="text" required placeholder="City, area, landmark" />
+          </label>
+          <div class="form-row">
+            <label>
+              Purpose of valuation
+              <select name="purpose" required>
+                <option value="">Select purpose</option>
+                <option>Home loan</option>
+                <option>Loan against property</option>
+                <option>Buying / selling</option>
+                <option>Legal / family settlement</option>
+                <option>Asset declaration to government authority</option>
+                <option>Personal knowledge</option>
+              </select>
+            </label>
+            <label>
+              Preferred contact time
+              <select name="contactTime">
+                <option value="">Select time</option>
+                <option>Morning</option>
+                <option>Afternoon</option>
+                <option>Evening</option>
+                <option>Anytime</option>
+              </select>
+            </label>
+          </div>
+          <label>
+            Additional information
+            <textarea name="details" rows="4" placeholder="Mention property age, floor, road width, occupancy, documents available, etc."></textarea>
+          </label>
+          <button class="primary-button full-button" type="submit">Submit valuation request</button>
+          <p class="form-status" id="form-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer" id="contact">
+      <div>
+        <strong>Y&amp;P Associates</strong>
+        <p>Professional valuation of buildings, land, flats, factories, commercial assets, and bank mortgage cases.</p>
+        <div class="contact-details" aria-label="Contact details">
+          <a href="tel:9958067860">9958067860</a>
+          <a href="tel:8851008259">8851008259</a>
+          <a href="mailto:yatendrapaliwal1@gmail.com">yatendrapaliwal1@gmail.com</a>
+        </div>
+      </div>
+      <a class="primary-button" href="#register">Submit request</a>
+    </footer>
+
+    <script>
+      const calculatorForm = document.getElementById("calculator-form");
+      const estimateValue = document.getElementById("estimate-value");
+      const registrationForm = document.getElementById("registration-form");
+      const formStatus = document.getElementById("form-status");
+      const typeMultipliers = { flat: 1, building: 1.08, land: 0.95, factory: 1.15 };
+
+      function formatRupees(value) {
+        return new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(value);
+      }
+
+      function updateEstimate() {
+        const area = Number(document.getElementById("calc-area").value);
+        const rate = Number(document.getElementById("calc-rate").value);
+        const type = document.getElementById("calc-type").value;
+        const age = Number(document.getElementById("calc-age").value);
+
+        if (!area || !rate) {
+          estimateValue.textContent = "Rs. 0";
+          return;
+        }
+
+        estimateValue.textContent = formatRupees(area * rate * typeMultipliers[type] * age);
+      }
+
+      calculatorForm.addEventListener("input", updateEstimate);
+
+      registrationForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const formData = new FormData(registrationForm);
+        const enquiry = Object.fromEntries(formData.entries());
+        const enquiries = JSON.parse(localStorage.getItem("valuationEnquiries") || "[]");
+
+        enquiries.push({ ...enquiry, createdAt: new Date().toISOString() });
+        localStorage.setItem("valuationEnquiries", JSON.stringify(enquiries));
+
+        registrationForm.reset();
+        formStatus.className = "form-status success";
+        formStatus.textContent =
+          "Your valuation request has been submitted. Y&P Associates will contact you shortly.";
+      });
+
+      updateEstimate();
+    </script>
+  </body>
+</html>
+```
