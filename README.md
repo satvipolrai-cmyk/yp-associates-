@@ -1,2 +1,0 @@
-# yp-associates-
-n
